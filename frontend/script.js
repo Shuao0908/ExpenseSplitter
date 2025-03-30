@@ -1,3 +1,15 @@
+// {
+//     "URL": "http://expense-splitter-app.azurewebsites.net",
+//     "appserviceplan": "sab1e22_asp_7158",
+//     "location": "canadacentral",
+//     "name": "expense-splitter-app",
+//     "os": "Linux",
+//     "resourcegroup": "ExpenseSplitterRG",
+//     "runtime_version": "PYTHON|3.10",
+//     "runtime_version_detected": "-",
+//     "sku": "FREE",
+//     "src_path": "C:\\Users\\BehShuAo\\Downloads\\COMP3207_CW"
+//   }
 const API_URL = "http://localhost:8000";
 
 async function fetchExpenses() {
