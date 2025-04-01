@@ -1,10 +1,14 @@
 # Database connection
-from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+mysqlconnector://user:password@azure-mysql-db/expense_db")
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import MetaData, create_engine
+meta = MetaData()
+
+# DATABASE_URL = os.getenv("DATABASE_URL", "mysql+mysqlconnector://user:password@azure-mysql-db/expense_db")
+DATABASE_URL= "mysql+mysqlconnector://root:@localhost:3306/expensesplitter"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
