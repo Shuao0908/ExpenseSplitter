@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
     <div class="container mt-4">
         <h2 class="text-center">Expense Splitter Dashboard</h2>
-        
+
         <!-- Create Group Section -->
         <div class="card mb-4">
             <div class="card-header">Create Group</div>
@@ -20,22 +22,32 @@
                 <label for="createdBy">Your Email:</label>
                 <input type="email" id="createdBy" class="form-control mb-2" placeholder="Enter Your Email">
                 <label for="participantEmail">Add Participants:</label>
-                <input type="email" id="participantEmail" class="form-control mb-2" placeholder="Enter Participant Email">
+                <input type="email" id="participantEmail" class="form-control mb-2"
+                    placeholder="Enter Participant Email">
                 <button class="btn btn-secondary mb-2" onclick="addParticipant()">Add Participant</button>
                 <ul id="participantList" class="list-group mb-2"></ul>
                 <button class="btn btn-primary" onclick="createGroup()">Create Group</button>
                 <ul id="groupList" class="mt-3 list-group"></ul>
             </div>
         </div>
-        
+        <div class="card mb-4">
+            <div class="card-header">Group Details</div>
+            <div class="card-body" id="groups-list">
+                <!-- Group list will be inserted here -->
+            </div>
+        </div>
+
         <!-- Add Expense Section -->
         <div class="card mb-4">
             <div class="card-header">Add Expense</div>
             <div class="card-body">
                 <label for="amount">Amount:</label>
                 <input type="number" id="amount" class="form-control mb-2" placeholder="Enter Amount">
+                <label for="groupSelect">Group:</label>
+                <select id="groupSelect" class="form-control mb-2"></select>
                 <label for="payer">Payer:</label>
-                <input type="text" id="payer" class="form-control mb-2" placeholder="Enter Payer Name">
+                <select id="payer" class="form-control mb-2"></select>
+                <!-- <input type="text" id="payer" class="form-control mb-2" placeholder="Enter Payer Name"> -->
                 <label for="category">Category:</label>
                 <select id="category" class="form-control mb-2">
                     <option>Food</option>
@@ -43,8 +55,6 @@
                     <option>Entertainment</option>
                     <option>Other</option>
                 </select>
-                <label for="groupSelect">Group:</label>
-                <select id="groupSelect" class="form-control mb-2"></select>
                 <label for="splitType">Split Type:</label>
                 <select id="splitType" class="form-control mb-2" onchange="toggleSplitType()">
                     <option value="equal">Split Equally</option>
@@ -54,7 +64,7 @@
                 <button class="btn btn-success" onclick="addExpense()">Add Expense</button>
             </div>
         </div>
-        
+
         <!-- Settle Debts Section -->
         <div class="card mb-4">
             <div class="card-header">Settle Debts</div>
@@ -66,7 +76,7 @@
                 <button class="btn btn-warning" onclick="settleDebt()">Settle Debt</button>
             </div>
         </div>
-        
+
         <!-- View Expenses Section -->
         <div class="card mb-4">
             <div class="card-header text-center">Expenses</div>
@@ -75,39 +85,168 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         let groups = [];
         let expenses = [];
         let participants = [];
+        let participantsData = {};
 
+        window.onload = function () {
+            getUserGroups();// This function should fetch and render the group list
+            addEventListeners();
+        }
+        function addEventListeners() {
+            const groupSelect = document.getElementById("groupSelect");
+            groupSelect.addEventListener("change", function () {
+                updatePayerDropdown(this.value);
+            });
+        }
         function addParticipant() {
-            let participantEmail = $("#participantEmail").val();
+            let participantEmail = $("#participantEmail").val().trim();
+            // Validate email input
             if (!participantEmail) {
                 alert("Please enter a valid email.");
                 return;
             }
+
+            if (participants.includes(participantEmail)) {
+                alert("This participant is already added.");
+                return;
+            }
+            // Add participant to the array
             participants.push(participantEmail);
-            $("#participantList").append(`<li class='list-group-item'>${participantEmail}</li>`);
+
+            // Update the participant list UI
+            $("#participantList").append(`<li class='list-group-item'>${participantEmail} 
+                <button class="btn btn-sm btn-danger float-end" onclick="removeParticipant('${participantEmail}')">Remove</button></li>`);
             $("#participantEmail").val("");
+        }
+
+        function removeParticipant(email) {
+            // Remove from array
+            participants = participants.filter(participant => participant !== email);
+
+            // Remove from UI
+            $("#participantList").html("");
+            participants.forEach(email => {
+                $("#participantList").append(`<li class='list-group-item'>${email} 
+            <button class="btn btn-sm btn-danger float-end" onclick="removeParticipant('${email}')">Remove</button>
+        </li>`);
+            });
         }
 
         function createGroup() {
             let groupName = $("#groupName").val();
             let createdBy = $("#createdBy").val();
             let createdAt = new Date().toLocaleString();
+            let participantEmail = $("#participantEmail").val();
             if (!groupName || !createdBy) {
                 alert("Please enter a group name and your email.");
                 return;
             }
-            let group = { name: groupName, createdBy, createdAt, members: participants };
-            groups.push(group);
-            $("#groupList").append(`<li class='list-group-item'>${groupName} (Created by: ${createdBy} on ${createdAt})</li>`);
-            $("#groupSelect").append(`<option>${groupName}</option>`);
-            $("#groupName, #createdBy").val("");
-            participants = [];
-            $("#participantList").empty();
+            // console.log("Participants List:", participants);
+            let group = { groupName: groupName, createdBy, participants: participants };
+
+
+            // Send POST request to the backend
+            fetch("http://127.0.0.1:8000/create-group", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(group)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(JSON.stringify(group));
+                    if (data.success) {
+                        // Append the new group to the list
+                        $("#groupList").append(`<li class='list-group-item'>${groupName} (Created by: ${createdBy} on ${createdAt})</li>`);
+                        $("#groupSelect").append(`<option>${groupName}</option>`);
+
+                        // Clear input fields
+                        $("#groupName, #createdBy").val("");
+                        participants = [];
+                        $("#participantList").empty();
+                    } else {
+                        alert("Error creating group. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("There was an error while creating the group.");
+                });
         }
+
+        async function getUserGroups() {
+            // const email = document.getElementById("email").value;
+            const email = "innocwentxuan@gmail.com";
+            if (!email) {
+                alert("Please enter a valid email");
+                return;
+            }
+
+            try {
+                // Fetch data from FastAPI endpoint
+                const response = await fetch(`http://127.0.0.1:8000/user-groups?email=${email}`);
+
+                if (!response.ok) { throw new Error("Failed to fetch groups"); }
+                const groups = await response.json();
+
+                // Clear the previous group list
+                document.getElementById("groups-list").innerHTML = "";
+                const groupSelect = document.getElementById("groupSelect");
+                groupSelect.innerHTML = "";
+
+                if (groups.length === 0) {
+                    document.getElementById("groups-list").innerHTML = "You are not involved in any groups.";
+                    groupSelect.innerHTML = `<option value="">No groups available</option>`;
+                    return;
+                }
+
+                // Create a group display for each group
+                groups.forEach(group => {
+                    participantsData[group.groupID] = [group.createdBy, ...group.participants];
+
+                    const groupElement = document.createElement("div");
+                    groupElement.classList.add("group");
+
+                    groupElement.innerHTML = `<h3>${group.groupName}</h3>
+                                              <p><strong>Created By:</strong> ${group.createdBy}</p>
+                                              <p><strong>Created On:</strong> ${new Date(group.createdDate).toLocaleString()}</p>
+                                              <div class="participants">
+                                              <strong>Participants:</strong> ${group.participants.join(", ")}
+                                              </div>`;
+
+                    document.getElementById("groups-list").appendChild(groupElement);
+
+                    const option = document.createElement("option");
+                    option.value = group.groupID; // Use group ID as value
+                    option.textContent = group.groupName; // Display group name
+                    groupSelect.appendChild(option);
+
+                });
+            } catch (error) {
+                console.error(error);
+                alert("Error fetching group data. Please try again later.");
+            }
+        }
+        function updatePayerDropdown(groupId) {
+            const payerSelect = document.getElementById("payer");
+            payerSelect.innerHTML = '';
+            payerSelect.innerHTML = `<option value="">Select a Payer</option>`;
+            if (!groupId || !participantsData[groupId]) return;
+
+            participantsData[groupId].forEach(userEmail => {
+                const option = document.createElement("option");
+                option.value = userEmail;
+                option.textContent = userEmail;
+                payerSelect.appendChild(option);
+            });
+        }
+
     </script>
 </body>
+
 </html>

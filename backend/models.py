@@ -42,7 +42,7 @@ class ExpenseCategory(Base):
     categoryID = Column(Integer, primary_key=True, autoincrement=True)
     categoryName = Column(String(100), nullable=False)
     
-    expenses = relationship("Expense", back_populates="category")
+    # expenses = relationship("Expense", back_populates="category")
 
 class Expense(Base):
     __tablename__ = "expenses"
@@ -50,13 +50,12 @@ class Expense(Base):
     expenseID = Column(Integer, primary_key=True, autoincrement=True)
     groupID = Column(Integer, ForeignKey("groups.groupID"), nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False)
-    categoryID = Column(Integer, ForeignKey("expensecategories.categoryID"))
+    category = Column(String(255), nullable=True)  # Changed from Integer ForeignKey to String
     expenseDate = Column(Date, nullable=False)
     payerID = Column(Integer, ForeignKey("users.userID"), nullable=False)
     createdAt = Column(TIMESTAMP, server_default=func.current_timestamp())
     
     group = relationship("Group", back_populates="expenses")
-    category = relationship("ExpenseCategory", back_populates="expenses")
     payer = relationship("User", back_populates="expenses_paid")
     settlements = relationship("Settlement", back_populates="expense")
 
