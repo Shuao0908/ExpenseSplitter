@@ -12,7 +12,7 @@ from database import SessionLocal
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from schema import GroupDetails, GroupCreate
+from schema import GroupDetails, GroupCreate, ExactSplit, ExpenseCreate, ExpenseSchema,SettlementSchema
 
 app = FastAPI()
 
@@ -128,12 +128,10 @@ async def get_user_groups(email: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No groups found for this user as creator")
 
     # Fetch groups where the user is a participant
-    # participant_groups = db.query(Group).join(UserGroup).join(User).filter(User.email == email).all()
     participant_groups = (db.query(Group).join(UserGroup).filter(UserGroup.userID == User.userID).all())
     print(f"Participant groups: {participant_groups}")
 
     # Combine both lists (creator and participant)
-    # all_groups = creator_groups + participant_groups
     all_groups = {group.groupID: group for group in creator_groups + participant_groups}.values()
     print(f"All groups: {all_groups}")
 
@@ -141,36 +139,147 @@ async def get_user_groups(email: str, db: Session = Depends(get_db)):
     group_details = []
     
     for group in all_groups:
-        # Get participants emails for the group
-        participant_emails = [
-            user.email for user in db.query(User).join(UserGroup).filter(UserGroup.groupID == group.groupID).all()
+        participants = [
+            {
+                "userID": user.userID,
+                "email": user.email,
+                "name": user.name
+            }
+            for user in db.query(User).join(UserGroup).filter(UserGroup.groupID == group.groupID).all()
         ]
-        # participants = [
-        #     {
-        #         "userID": user.userID,
-        #         "email": user.email,
-        #         "name": user.name
-        #     }
-        #     for user in db.query(User).join(UserGroup).filter(UserGroup.groupID == group.groupID).all()
-        # ]
 
         # Get the user email for the creator
         creator_user = db.query(User).filter(User.userID == group.createdBy).first()
-        created_by_email = creator_user.name if creator_user else "Unknown"
+        if creator_user:
+            creator_info = {
+                "userID": creator_user.userID,
+                "email": creator_user.email,
+                "name": creator_user.name
+            }
+        else:
+            creator_info = {"userID": 0, "email": "Unknown", "name": "Unknown"}
 
         group_details.append(
             GroupDetails(
                 group_id=group.groupID,
                 groupName=group.groupName,
-                createdBy=created_by_email,  # The email of the creator
+                createdBy=creator_info , 
                 createdDate=group.createdDate.isoformat(),
-                participants=participant_emails
-                # participants=participants
+                participants=participants
             )
         )
 
     return group_details
 
+@app.post("/add-expense", response_model=dict)
+async def add_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
+    try:
+        # Create the expense record
+        new_expense = Expense(
+            groupID=expense.groupID,
+            amount=expense.amount,
+            category=expense.category,
+            expenseDate=expense.expenseDate,
+            payerID=expense.payerID,
+            createdAt=datetime.now()
+        )
+        print(new_expense)
+        db.add(new_expense)
+        db.commit()
+        db.refresh(new_expense)
+
+        # If splits are provided, process them
+        if expense.splits:
+            total_split = sum(split.amount for split in expense.splits)
+            if abs(total_split - expense.amount) > 0.01:
+                # Amounts don't add up. Raise an error.
+                raise HTTPException(
+                    status_code=400, 
+                    detail="The split amounts do not sum up to the total expense amount."
+                )
+            
+            # Create a settlement record for each split
+            for split in expense.splits:
+                new_settlement = Settlement(
+                    expenseID=new_expense.expenseID,
+                    payerID=expense.payerID,    # The person who paid
+                    receiverID=split.userID,     # The person owing a share
+                    amount=split.amount,
+                    status='PENDING'
+                )
+                db.add(new_settlement)
+                db.commit()
+        else:
+            # If no splits provided, assume an equal split or handle as needed
+            pass
+
+        return {"success": True, "expenseID": new_expense.expenseID}
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/expenses/{groupID}", response_model=List[ExpenseSchema])  
+def get_expenses(groupID: int, db: Session = Depends(get_db)):  
+    expenses = db.query(Expense).filter(Expense.groupID == groupID).all()
+    return expenses
+
+# Helper function to get the user's group IDs
+def get_user_group_ids(email: str, db: Session):
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Fetch groups where the user is the creator
+    creator_groups = db.query(Group.groupID).filter(Group.createdBy == user.userID).all()
+    
+    # Fetch groups where the user is a participant
+    participant_groups = db.query(UserGroup.groupID).filter(UserGroup.userID == user.userID).all()
+
+    # Combine group IDs, removing duplicates
+    group_ids = list({gid[0] for gid in creator_groups + participant_groups})
+    
+    print(f"User {email} is involved in group IDs: {group_ids}")
+
+    return group_ids
+
+@app.get("/settlements/{email}", response_model=List[SettlementSchema])
+def get_user_settlements(email: str, db: Session = Depends(get_db)):
+    group_ids = get_user_group_ids(email, db)
+    
+    settlements = db.query(Settlement).join(Expense, Settlement.expenseID == Expense.expenseID).filter(Expense.groupID.in_(group_ids)).all()
+    # Convert ORM objects to response format
+    response = [
+        SettlementSchema(
+            settlementID=s.settlementID,
+            expenseID=s.expenseID,
+            payerID=s.payerID,
+            receiverID=s.receiverID,
+            amount=s.amount,
+            settlementDate=s.settlementDate.date(),  # Convert datetime to date
+            status=s.status,
+            groupID=s.expense.groupID  # Ensure groupID is included
+        )
+        for s in settlements
+    ]
+    print(response)
+    
+    return response
+
+
+
+
+# ✅ UPDATE a settlement (mark as completed)
+@app.put("/settlements/{settlement_id}", response_model=SettlementSchema)
+def update_settlement(settlement_id: int, db: Session = Depends(get_db)):
+    settlement = db.query(Settlement).filter(Settlement.settlementID == settlement_id).first()
+    if not settlement:
+        raise HTTPException(status_code=404, detail="Settlement not found")
+    
+    settlement.status = "COMPLETED"
+    db.commit()
+    db.refresh(settlement)
+    return settlement
 
 
 
