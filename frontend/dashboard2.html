@@ -7,140 +7,183 @@
     <title>Expense Splitter Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="navigation.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-    <div class="container mt-4">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <!-- <img src="/api/placeholder/40/40" alt="Logo" class="logo-image"> -->
+                <span class="logo-text">SplitEase</span>
+            </div>
+
+            <div class="navbar-menu" id="navbar-menu">
+                <ul class="nav-links">
+                    <li class="nav-item active" data-target="create-group-section">
+                        <i class="nav-icon groups-icon"></i>
+                        <span>Groups</span>
+                    </li>
+                    <li class="nav-item" data-target="add-expense-section">
+                        <i class="nav-icon expense-icon"></i>
+                        <span>Expenses</span>
+                    </li>
+                    <li class="nav-item" data-target="view-expenses-section">
+                        <i class="nav-icon history-icon"></i>
+                        <span>History</span>
+                    </li>
+                    <li class="nav-item" data-target="settle-debts-section">
+                        <i class="nav-icon settle-icon"></i>
+                        <span>Settle Up</span>
+                    </li>
+                    <li class="nav-item" data-target="view-debts-section">
+                        <i class="nav-icon debts-icon"></i>
+                        <span>Balances</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="navbar-profile">
+                <div class="profile-icon">
+                    <span>JD</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section Container -->
+    <div id="sections-container" class="container mt-4">
         <h2 class="text-center">Expense Splitter Dashboard</h2>
 
         <!-- Create Group Section -->
-        <div class="card mb-4">
-            <div class="card-header">Create Group</div>
-            <div class="card-body">
-                <label for="groupName">Group Name:</label>
-                <input type="text" id="groupName" class="form-control mb-2" placeholder="Enter Group Name">
-                <label for="createdBy">Your Email:</label>
-                <input type="email" id="createdBy" class="form-control mb-2" placeholder="Enter Your Email">
-                <label for="participantEmail">Add Participants:</label>
-                <input type="email" id="participantEmail" class="form-control mb-2"
-                    placeholder="Enter Participant Email">
-                <button class="btn btn-secondary mb-2" onclick="addParticipant()">Add Participant</button>
-                <ul id="participantList" class="list-group mb-2"></ul>
-                <button class="btn btn-primary" onclick="createGroup()">Create Group</button>
-                <ul id="groupList" class="mt-3 list-group"></ul>
+        <section id="create-group-section" class="app-section active">
+            <div class="card mb-4">
+                <div class="card-header">Create Group</div>
+                <div class="card-body">
+                    <label for="groupName">Group Name:</label>
+                    <input type="text" id="groupName" class="form-control mb-2" placeholder="Enter Group Name">
+                    <label for="createdBy">Your Email:</label>
+                    <input type="email" id="createdBy" class="form-control mb-2" placeholder="Enter Your Email">
+                    <label for="participantEmail">Add Participants:</label>
+                    <input type="email" id="participantEmail" class="form-control mb-2"
+                        placeholder="Enter Participant Email">
+                    <button class="btn btn-secondary mb-2" onclick="addParticipant()">Add Participant</button>
+                    <ul id="participantList" class="list-group mb-2"></ul>
+                    <button class="btn btn-primary" onclick="createGroup()">Create Group</button>
+                    <ul id="groupList" class="mt-3 list-group"></ul>
+                </div>
             </div>
-        </div>
-        <div class="card mb-4">
-            <div class="card-header">Group Details</div>
-            <div class="card-body" id="groups-list">
-                <!-- Group list will be inserted here -->
+
+            <div class="card mb-4">
+                <div class="card-header">Group Details</div>
+                <div class="card-body" id="groups-list">
+                    <!-- Group list will be inserted here -->
+                </div>
             </div>
-        </div>
+        </section>
 
         <!-- Add Expense Section -->
-        <div class="card mb-4">
-            <div class="card-header">Add Expense</div>
-            <div class="card-body">
-                <label for="amount">Amount:</label>
-                <input type="number" id="amount" class="form-control mb-2" placeholder="Enter Amount">
-                <label for="groupSelect">Group:</label>
-                <select id="groupSelect" class="form-control mb-2"></select>
-                <label for="payer">Payer:</label>
-                <select id="payer" class="form-control mb-2"></select>
-                <!-- <input type="text" id="payer" class="form-control mb-2" placeholder="Enter Payer Name"> -->
-                <label for="categoryInput">Category:</label>
-                <input type="text" id="categoryInput" class="form-control mb-2" placeholder="Type your category">
+        <section id="add-expense-section" class="app-section">
+            <div class="card mb-4">
+                <div class="card-header">Add Expense</div>
+                <div class="card-body">
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" class="form-control mb-2" placeholder="Enter Amount">
+                    <label for="groupSelect">Group:</label>
+                    <select id="groupSelect" class="form-control mb-2"></select>
+                    <label for="payer">Payer:</label>
+                    <select id="payer" class="form-control mb-2"></select>
+                    <label for="categoryInput">Category:</label>
+                    <input type="text" id="categoryInput" class="form-control mb-2" placeholder="Type your category">
 
-                <div id="categoryButtons" class="mb-2">
-                    <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Food')">Food</button>
-                    <button type="button" class="btn btn-secondary m-1"
-                        onclick="setCategory('Transportation')">Transportation</button>
-                    <button type="button" class="btn btn-secondary m-1"
-                        onclick="setCategory('Utilities')">Utilities</button>
-                    <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Rent')">Rent</button>
-                    <button type="button" class="btn btn-secondary m-1"
-                        onclick="setCategory('Entertainment')">Entertainment</button>
-                    <button type="button" class="btn btn-secondary m-1"
-                        onclick="setCategory('Groceries')">Groceries</button>
-                    <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Travel')">Travel</button>
-                    <button type="button" class="btn btn-secondary m-1"
-                        onclick="setCategory('Miscellaneous')">Miscellaneous</button>
-                    <button type="button" class="btn btn-secondary m-1" onclick="setCategory('')">Other</button>
+                    <div id="categoryButtons" class="mb-2">
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Food')">Food</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Transportation')">Transportation</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Utilities')">Utilities</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Rent')">Rent</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Entertainment')">Entertainment</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Groceries')">Groceries</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Travel')">Travel</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('Miscellaneous')">Miscellaneous</button>
+                        <button type="button" class="btn btn-secondary m-1" onclick="setCategory('')">Other</button>
+                    </div>
+
+                    <label for="splitType">Split Type:</label>
+                    <select id="splitType" class="form-control mb-2" onchange="toggleSplitInputs()">
+                        <option value="">Please select a split</option>
+                        <option value="equal">Split Equally</option>
+                        <option value="exact">Split by Exact Amount</option>
+                    </select>
+
+                    <div id="equalSplitDisplay" style="display: none; margin-bottom: 10px;"></div>
+
+                    <div id="exactSplitInputs" class="mb-2" style="display: none;">
+                        <button class="btn btn-success" onclick="addExactSplit()">Add Split Entry</button>
+                        <div id="splitEntries"></div>
+                    </div>
+
+                    <button class="btn btn-success" onclick="addExpense()">Add Expense</button>
                 </div>
-                <label for="splitType">Split Type:</label>
-                <select id="splitType" class="form-control mb-2" onchange="toggleSplitInputs()"
-                    placeholder="Please select a split type">
-                    <option value="">Please select a split</option>
-                    <option value="equal">Split Equally</option>
-                    <option value="exact">Split by Exact Amount</option>
-                </select>
-                <!-- Equal split display -->
-                <div id="equalSplitDisplay" style="display: none; margin-bottom: 10px;"></div>
-                <!-- Exact split inputs container -->
-                <div id="exactSplitInputs" class="mb-2" style="display: none;">
-                    <!-- Container where user can add exact split entries dynamically -->
-                    <button class="btn btn-success" onclick="addExactSplit()">Add Split Entry</button>
-                    <div id="splitEntries"></div>
-                </div>
-                <button class="btn btn-success" onclick="addExpense()">Add Expense</button>
             </div>
-        </div>
+        </section>
 
         <!-- View Expenses Section -->
-        <div class="card mb-4">
-            <div class="card-header text-center">Expenses</div>
-            <div class="card-body">
-                <label for="groupSelect">Group:</label>
-                <select id="groupSelect2" class="form-control mb-2"></select>
-
-                <button onclick="fetchExpenses()" class="btn btn-primary">Load Transactions</button>
-                <div id="expenseList" class="transaction-history">
-                    <!-- Transactions will be dynamically inserted here -->
+        <section id="view-expenses-section" class="app-section">
+            <div class="card mb-4">
+                <div class="card-header text-center">Expenses</div>
+                <div class="card-body">
+                    <label for="groupSelect2">Group:</label>
+                    <select id="groupSelect2" class="form-control mb-2"></select>
+                    <button onclick="fetchExpenses()" class="btn btn-primary">Load Transactions</button>
+                    <div id="expenseList" class="transaction-history"></div>
                 </div>
-                <!-- <ul id="expenseList" class="list-group"></ul> -->
             </div>
-        </div>
+        </section>
 
         <!-- Settle Debts Section -->
-        <div class="card mb-4">
-            <div class="card-header">Settle Debts</div>
-            <div class="card-body">
-                <label for="settleAmount">Amount to Settle:</label>
-                <input type="number" id="settleAmount" class="form-control mb-2" placeholder="Enter Amount">
-                <label for="settleMethod">Payment Method:</label>
-                <input type="text" id="settleMethod" class="form-control mb-2" placeholder="Enter Payment Method">
-                <button class="btn btn-warning" onclick="settleDebt()">Settle Debt</button>
-            </div>
-        </div>
-
-        <!--View Debts Section -->
-        <div class="card mb-4">
-            <div class="card-header">Debts</div>
-            <div class="card-body">
-                <div class="filter-container">
-                    <select id="groupFilter" class="form-control mb-2"><option value="">All Groups</option></select>
-                    <select id="payerFilter" class="form-control mb-2"><option value="">All Payers</option></select>
-                    <select id="receiverFilter" class="form-control mb-2"><option value="">All Receivers</option></select>
+        <section id="settle-debts-section" class="app-section">
+            <div class="card mb-4">
+                <div class="card-header">Settle Debts</div>
+                <div class="card-body">
+                    <label for="settleAmount">Amount to Settle:</label>
+                    <input type="number" id="settleAmount" class="form-control mb-2" placeholder="Enter Amount">
+                    <label for="settleMethod">Payment Method:</label>
+                    <input type="text" id="settleMethod" class="form-control mb-2" placeholder="Enter Payment Method">
+                    <button class="btn btn-warning" onclick="settleDebt()">Settle Debt</button>
                 </div>
-            
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Group</th>
-                            <th>Payer</th>
-                            <th>Receiver</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="settlementsBody"></tbody>
-                </table>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <script>
+        <!-- View Debts Section -->
+        <section id="view-debts-section" class="app-section">
+            <div class="card mb-4">
+                <div class="card-header">Debts</div>
+                <div class="card-body">
+                    <div class="filter-container">
+                        <select id="groupFilter" class="form-control mb-2"><option value="">All Groups</option></select>
+                        <select id="payerFilter" class="form-control mb-2"><option value="">All Payers</option></select>
+                        <select id="receiverFilter" class="form-control mb-2"><option value="">All Receivers</option></select>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Payer</th>
+                                <th>Receiver</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="settlementsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- <script>
         let groups = [];
         let expenses = [];
         let participants = [];
@@ -614,7 +657,8 @@
 
         // Load data on page load
         document.addEventListener("DOMContentLoaded", fetchSettlements);
-    </script>
+    </script> -->
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
 </body>
-
 </html>

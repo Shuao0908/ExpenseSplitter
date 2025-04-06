@@ -1,0 +1,232 @@
+/* Navigation Bar Styles */
+.navbar {
+  background: linear-gradient(90deg, #1a2a6c, #4286f4);
+  padding: 12px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+.logo-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.navbar-menu {
+  flex-grow: 1;
+  margin: 0 40px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 30px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 500;
+}
+
+.nav-item.active:after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+}
+
+.nav-icon {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Icons using CSS masks for cleaner look */
+.groups-icon {
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12.75C8.83 12.75 6.25 10.17 6.25 7C6.25 3.83 8.83 1.25 12 1.25C15.17 1.25 17.75 3.83 17.75 7C17.75 10.17 15.17 12.75 12 12.75ZM12 2.75C9.66 2.75 7.75 4.66 7.75 7C7.75 9.34 9.66 11.25 12 11.25C14.34 11.25 16.25 9.34 16.25 7C16.25 4.66 14.34 2.75 12 2.75Z'/%3E%3Cpath d='M3.41 22.75C3 22.75 2.66 22.41 2.66 22C2.66 18.55 5.48 15.75 8.94 15.75H15.06C18.52 15.75 21.34 18.56 21.34 22C21.34 22.41 21 22.75 20.59 22.75C20.18 22.75 19.84 22.41 19.84 22C19.84 19.38 17.69 17.25 15.06 17.25H8.94C6.31 17.25 4.16 19.38 4.16 22C4.16 22.41 3.82 22.75 3.41 22.75Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12.75C8.83 12.75 6.25 10.17 6.25 7C6.25 3.83 8.83 1.25 12 1.25C15.17 1.25 17.75 3.83 17.75 7C17.75 10.17 15.17 12.75 12 12.75ZM12 2.75C9.66 2.75 7.75 4.66 7.75 7C7.75 9.34 9.66 11.25 12 11.25C14.34 11.25 16.25 9.34 16.25 7C16.25 4.66 14.34 2.75 12 2.75Z'/%3E%3Cpath d='M3.41 22.75C3 22.75 2.66 22.41 2.66 22C2.66 18.55 5.48 15.75 8.94 15.75H15.06C18.52 15.75 21.34 18.56 21.34 22C21.34 22.41 21 22.75 20.59 22.75C20.18 22.75 19.84 22.41 19.84 22C19.84 19.38 17.69 17.25 15.06 17.25H8.94C6.31 17.25 4.16 19.38 4.16 22C4.16 22.41 3.82 22.75 3.41 22.75Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+}
+
+.expense-icon {
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 6V8.42C22 10 21 11 19.42 11H16V4.01C16 2.9 16.91 2 18.02 2C19.11 2.01 20.11 2.45 20.83 3.17C21.55 3.9 22 4.9 22 6Z'/%3E%3Cpath d='M2 7V21C2 21.83 2.94 22.3 3.6 21.8L5.31 20.52C5.71 20.22 6.27 20.26 6.63 20.62L8.29 22.29C8.68 22.68 9.32 22.68 9.71 22.29L11.39 20.61C11.74 20.26 12.3 20.22 12.69 20.52L14.4 21.8C15.06 22.29 16 21.82 16 21V4C16 2.9 16.9 2 18 2H7H6C3 2 2 3.79 2 6V7Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 6V8.42C22 10 21 11 19.42 11H16V4.01C16 2.9 16.91 2 18.02 2C19.11 2.01 20.11 2.45 20.83 3.17C21.55 3.9 22 4.9 22 6Z'/%3E%3Cpath d='M2 7V21C2 21.83 2.94 22.3 3.6 21.8L5.31 20.52C5.71 20.22 6.27 20.26 6.63 20.62L8.29 22.29C8.68 22.68 9.32 22.68 9.71 22.29L11.39 20.61C11.74 20.26 12.3 20.22 12.69 20.52L14.4 21.8C15.06 22.29 16 21.82 16 21V4C16 2.9 16.9 2 18 2H7H6C3 2 2 3.79 2 6V7Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+}
+
+.history-icon {
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 8V13L15.44 15.16C15.79 15.37 15.91 15.81 15.7 16.16C15.57 16.38 15.33 16.5 15.08 16.5C14.95 16.5 14.82 16.47 14.7 16.4L10.7 14C10.5 13.88 10.38 13.66 10.38 13.41V8C10.38 7.59 10.72 7.25 11.13 7.25C11.54 7.25 11.88 7.59 11.88 8Z'/%3E%3Cpath d='M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM12 20.5C7.31 20.5 3.5 16.69 3.5 12C3.5 7.31 7.31 3.5 12 3.5C16.69 3.5 20.5 7.31 20.5 12C20.5 16.69 16.69 20.5 12 20.5Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 8V13L15.44 15.16C15.79 15.37 15.91 15.81 15.7 16.16C15.57 16.38 15.33 16.5 15.08 16.5C14.95 16.5 14.82 16.47 14.7 16.4L10.7 14C10.5 13.88 10.38 13.66 10.38 13.41V8C10.38 7.59 10.72 7.25 11.13 7.25C11.54 7.25 11.88 7.59 11.88 8Z'/%3E%3Cpath d='M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM12 20.5C7.31 20.5 3.5 16.69 3.5 12C3.5 7.31 7.31 3.5 12 3.5C16.69 3.5 20.5 7.31 20.5 12C20.5 16.69 16.69 20.5 12 20.5Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+}
+
+.settle-icon {
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.97 22.75H4.97C1.98 22.75 0.72 21.21 0.72 18.97V8.97C0.72 6.73 1.98 5.22 4.97 5.22H6.22C6.63 5.22 6.97 5.56 6.97 5.97C6.97 6.38 6.63 6.72 6.22 6.72H4.97C2.76 6.72 2.22 7.53 2.22 8.97V18.97C2.22 20.41 2.76 21.25 4.97 21.25H18.97C21.17 21.25 21.72 20.41 21.72 18.97V8.97C21.72 7.53 21.17 6.72 18.97 6.72H17.72C17.31 6.72 16.97 6.38 16.97 5.97C16.97 5.56 17.31 5.22 17.72 5.22H18.97C21.96 5.22 23.22 6.73 23.22 8.97V18.97C23.22 21.21 21.96 22.75 18.97 22.75Z'/%3E%3Cpath d='M16 7.75H8C5.58 7.75 4.25 6.42 4.25 4V3C4.25 0.58 5.58 -0.75 8 -0.75H16C18.42 -0.75 19.75 0.58 19.75 3V4C19.75 6.42 18.42 7.75 16 7.75ZM8 0.75C6.42 0.75 5.75 1.42 5.75 3V4C5.75 5.58 6.42 6.25 8 6.25H16C17.58 6.25 18.25 5.58 18.25 4V3C18.25 1.42 17.58 0.75 16 0.75H8Z'/%3E%3Cpath d='M12.05 16.52C11.64 16.52 11.3 16.18 11.3 15.77V9.52C11.3 9.11 11.64 8.77 12.05 8.77C12.46 8.77 12.8 9.11 12.8 9.52V15.77C12.8 16.19 12.46 16.52 12.05 16.52Z'/%3E%3Cpath d='M15.18 13.39H8.93C8.52 13.39 8.18 13.05 8.18 12.64C8.18 12.23 8.52 11.89 8.93 11.89H15.18C15.59 11.89 15.93 12.23 15.93 12.64C15.93 13.05 15.59 13.39 15.18 13.39Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.97 22.75H4.97C1.98 22.75 0.72 21.21 0.72 18.97V8.97C0.72 6.73 1.98 5.22 4.97 5.22H6.22C6.63 5.22 6.97 5.56 6.97 5.97C6.97 6.38 6.63 6.72 6.22 6.72H4.97C2.76 6.72 2.22 7.53 2.22 8.97V18.97C2.22 20.41 2.76 21.25 4.97 21.25H18.97C21.17 21.25 21.72 20.41 21.72 18.97V8.97C21.72 7.53 21.17 6.72 18.97 6.72H17.72C17.31 6.72 16.97 6.38 16.97 5.97C16.97 5.56 17.31 5.22 17.72 5.22H18.97C21.96 5.22 23.22 6.73 23.22 8.97V18.97C23.22 21.21 21.96 22.75 18.97 22.75Z'/%3E%3Cpath d='M16 7.75H8C5.58 7.75 4.25 6.42 4.25 4V3C4.25 0.58 5.58 -0.75 8 -0.75H16C18.42 -0.75 19.75 0.58 19.75 3V4C19.75 6.42 18.42 7.75 16 7.75ZM8 0.75C6.42 0.75 5.75 1.42 5.75 3V4C5.75 5.58 6.42 6.25 8 6.25H16C17.58 6.25 18.25 5.58 18.25 4V3C18.25 1.42 17.58 0.75 16 0.75H8Z'/%3E%3Cpath d='M12.05 16.52C11.64 16.52 11.3 16.18 11.3 15.77V9.52C11.3 9.11 11.64 8.77 12.05 8.77C12.46 8.77 12.8 9.11 12.8 9.52V15.77C12.8 16.19 12.46 16.52 12.05 16.52Z'/%3E%3Cpath d='M15.18 13.39H8.93C8.52 13.39 8.18 13.05 8.18 12.64C8.18 12.23 8.52 11.89 8.93 11.89H15.18C15.59 11.89 15.93 12.23 15.93 12.64C15.93 13.05 15.59 13.39 15.18 13.39Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+}
+
+.debts-icon {
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.75 22.16H6.75C2.89 22.16 1.25 20.52 1.25 16.66V4.6C1.25 2.81 2.1 1.84 3.86 1.68C3.89 1.68 3.91 1.68 3.94 1.68H14.84C15.25 1.68 15.59 2.02 15.59 2.43C15.59 2.84 15.25 3.18 14.84 3.18H3.94C2.96 3.29 2.75 3.66 2.75 4.6V16.66C2.75 19.69 3.72 20.66 6.75 20.66H16.75C19.78 20.66 20.75 19.69 20.75 16.66V9.07C20.75 8.66 21.09 8.32 21.5 8.32C21.91 8.32 22.25 8.66 22.25 9.07V16.66C22.25 20.52 20.61 22.16 16.75 22.16Z'/%3E%3Cpath d='M13.25 8.94H5.84C5.43 8.94 5.09 8.6 5.09 8.19C5.09 7.78 5.43 7.44 5.84 7.44H13.25C13.66 7.44 14 7.78 14 8.19C14 8.6 13.66 8.94 13.25 8.94Z'/%3E%3Cpath d='M9.54 18.17C9.13 18.17 8.79 17.83 8.79 17.42V14.36C8.79 13.95 9.13 13.61 9.54 13.61C9.95 13.61 10.29 13.95 10.29 14.36V17.42C10.29 17.83 9.95 18.17 9.54 18.17Z'/%3E%3Cpath d='M12.59 15.1H6.5C6.09 15.1 5.75 14.76 5.75 14.35C5.75 13.94 6.09 13.6 6.5 13.6H12.59C13 13.6 13.34 13.94 13.34 14.35C13.34 14.76 13 15.1 12.59 15.1Z'/%3E%3Cpath d='M21.25 6.25H17.75C14.89 6.25 14.25 5.61 14.25 2.75V1.75C14.25 1.34 14.59 1 15 1C15.41 1 15.75 1.34 15.75 1.75V2.75C15.75 4.83 15.92 4.75 17.75 4.75H21.25C21.66 4.75 22 5.09 22 5.5C22 5.91 21.66 6.25 21.25 6.25Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.75 22.16H6.75C2.89 22.16 1.25 20.52 1.25 16.66V4.6C1.25 2.81 2.1 1.84 3.86 1.68C3.89 1.68 3.91 1.68 3.94 1.68H14.84C15.25 1.68 15.59 2.02 15.59 2.43C15.59 2.84 15.25 3.18 14.84 3.18H3.94C2.96 3.29 2.75 3.66 2.75 4.6V16.66C2.75 19.69 3.72 20.66 6.75 20.66H16.75C19.78 20.66 20.75 19.69 20.75 16.66V9.07C20.75 8.66 21.09 8.32 21.5 8.32C21.91 8.32 22.25 8.66 22.25 9.07V16.66C22.25 20.52 20.61 22.16 16.75 22.16Z'/%3E%3Cpath d='M13.25 8.94H5.84C5.43 8.94 5.09 8.6 5.09 8.19C5.09 7.78 5.43 7.44 5.84 7.44H13.25C13.66 7.44 14 7.78 14 8.19C14 8.6 13.66 8.94 13.25 8.94Z'/%3E%3Cpath d='M9.54 18.17C9.13 18.17 8.79 17.83 8.79 17.42V14.36C8.79 13.95 9.13 13.61 9.54 13.61C9.95 13.61 10.29 13.95 10.29 14.36V17.42C10.29 17.83 9.95 18.17 9.54 18.17Z'/%3E%3Cpath d='M12.59 15.1H6.5C6.09 15.1 5.75 14.76 5.75 14.35C5.75 13.94 6.09 13.6 6.5 13.6H12.59C13 13.6 13.34 13.94 13.34 14.35C13.34 14.76 13 15.1 12.59 15.1Z'/%3E%3Cpath d='M21.25 6.25H17.75C14.89 6.25 14.25 5.61 14.25 2.75V1.75C14.25 1.34 14.59 1 15 1C15.41 1 15.75 1.34 15.75 1.75V2.75C15.75 4.83 15.92 4.75 17.75 4.75H21.25C21.66 4.75 22 5.09 22 5.5C22 5.91 21.66 6.25 21.25 6.25Z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+}
+
+.navbar-profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.profile-icon:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Section Management */
+#sections-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.app-section {
+  display: none;
+}
+
+.app-section.active {
+  display: block;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navbar-menu {
+    margin: 10px 0;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .nav-links {
+    width: max-content;
+    padding: 0 10px;
+  }
+
+  .nav-item {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .navbar-profile {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+  }
+}
+
+
+/* Section visibility */
+.app-section {
+  display: none;
+}
+
+.app-section.active {
+  display: block;
+}
+
+/* Active navigation item styling */
+.nav-item {
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item:hover {
+  opacity: 0.9;
+}
+
+.nav-item.active {
+  opacity: 1;
+  font-weight: bold;
+}
+
+/* Optional: Add animation for section transitions */
+.app-section {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.app-section.active {
+  opacity: 1;
+  transform: translateY(0);
+}
